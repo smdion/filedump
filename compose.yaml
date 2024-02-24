@@ -1,0 +1,47 @@
+version: "3.3"
+services:
+  npm:
+    image: jc21/nginx-proxy-manager:latest
+    restart: unless-stopped
+    ports:
+      - 443:443
+    volumes:
+      - /opt/npm:/data
+      - /opt/npm/letsencrypt:/etc/letsencrypt
+    networks:
+      - proxynet
+  uptime-kuma:
+    restart: always
+    volumes:
+      - /opt/uptime_kuma:/app/data
+    container_name: uptime-kuma
+    image: louislam/uptime-kuma:1
+    networks:
+      - proxynet
+  wireguard:
+    image: lscr.io/linuxserver/wireguard:latest
+    container_name: wireguard
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Chicago
+      - SERVERURL=vpn.seandion.com
+      - SERVERPORT=51820
+      - PEERS=001,002,003,004,005,006
+      - PEERDNS=8.8.8.8
+      - INTERNAL_SUBNET=10.253.100.0
+      - ALLOWEDIPS=10.253.100.1/32
+      - PERSISTENTKEEPALIVE_PEERS=all
+      - LOG_CONFS=false
+    volumes:
+      - /opt/wireguard:/config
+      - /lib/modules:/lib/modules
+    ports:
+      - 51820:51820/udp
+    sysctls:
+      - net.ipv4.conf.all.src_valid_mark=1
+networks:
+  proxynetwork:
