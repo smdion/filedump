@@ -47,7 +47,6 @@ services:
     restart: unless-stopped
     container_name: portainer
     image: portainer/portainer-ee:latest
-    restart: always
     ports:
       - 9000:9000/tcp
     environment:
