@@ -1,4 +1,4 @@
-  GNU nano 6.2                      compose.yaml
+
 version: "3.3"
 services:
   npm:
@@ -30,7 +30,8 @@ services:
       - TZ=America/Chicago
       - SERVERURL=vps.seandion.com
       - SERVERPORT=51820
-      - PEERS=1
+      - SERVER_ALLOWEDIPS_PEER_1=10.0.0.0/8
+      - PEERS=3
       - INTERNAL_SUBNET=10.253.100.0
     volumes:
       - /opt/wireguard:/config
@@ -40,7 +41,7 @@ services:
       - 80:80
     sysctls:
       - net.ipv4.conf.all.src_valid_mark=1
-      - net.ipv4.ip_forward=1
+     # - net.ipv4.ip_forward=1
     networks:
       - proxynet
   portainer:
